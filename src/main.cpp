@@ -1,15 +1,21 @@
 #include <iostream>
 #include "Utility.h"
+#include "LogisticRegression.h"
 
 int main() 
 {
 	std::string path = "../Datasets/diabetes.csv";
 	std::vector<std::vector<double>> dataset;
-	std::vector<std::string> classes;
+	std::vector<int> classes;
 	
 	parse_csv(dataset, classes, path);
-	std::cout << "Size of dataset: " << dataset.size() << std::endl;
-	std::cout << "Number of classes: " << classes.size() << std::endl;
+	
+	Logistic_Regressor model(dataset[0].size());
+	model.Fit(dataset);
 
-	std::cout << "Hello world" << std::endl;
+	std::vector<int> predictions;
+	model.Predict(dataset, predictions);
+
+	double accuracy = compute_accuracy(predictions, classes);
+	std::cout << "Accuracy: " << compute_accuracy << std::endl;
 }

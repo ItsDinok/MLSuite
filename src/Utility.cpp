@@ -30,7 +30,23 @@ void parse_csv(std::vector<std::vector<double>>& out_set, std::vector<std::strin
 		}
 
 		// The last column is assumed to be label
-		labels.push_back(buffer);
+		labels.push_back(std::stoi(buffer));
 		out_set.push_back(new_line);
 	}
+}
+
+double compute_accuracy(std::vector<int>& predictions, std::vector<int>& truth)
+{
+	int total = predictions.size();
+	int correct = 0;
+
+	for (int i = 0; i < total; ++i)
+	{
+		if (predictions[i] == truth[i])
+		{
+			++correct;
+		}
+	}
+
+	return correct / total;
 }
