@@ -3,6 +3,7 @@
 #include <math.h>
 #include <vector>
 #include <iostream>
+#include <cassert>
 
 class Logistic_Regressor 
 {
@@ -24,6 +25,7 @@ private:
 	// Attributes
 	std::vector<double> weights;
 	int features;
-	int epochs = 250;
-	double learning_rate = 0.001;
+	double bias = 0.0d;
+	int epochs = 200;
+	double learning_rate = 0.001d;
 };

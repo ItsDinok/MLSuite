@@ -13,19 +13,33 @@ int main()
 	std::vector<std::vector<double>> dataset;
 	std::vector<int> classes;
 	
+	// Get and clean data
 	parse_csv(dataset, classes, path);
 	normalise(dataset);
-	//remove_illegal_zeros(dataset, ILLEGAL_ZEROS_DIABETES);
+
+	// Train/test data structures
+	std::vector<std::vector<double>> x_train;
+	std::vector<std::vector<double>> x_test;
+	std::vector<int> y_train;
+	std::vector<int> y_test;
+	const float PROPORTION = 0.8f;
+	train_test_split(dataset, classes, x_train, x_test, y_train, y_test, PROPORTION);
+
+	std::cout << "x_train size: " << x_train.size() << std::endl;
+	std::cout << "y_train size: " << y_train.size() << std::endl;
+	std::cout << "x_test size: " << x_test.size() << std::endl;
+	std::cout << "y_test size: " << y_test.size() << std::endl;
+
 
 	Logistic_Regressor model(dataset[0].size());
-	model.Fit(dataset, classes);
-	std::cout << "Got here" << std::endl;
+	model.Fit(x_train, y_train);
+	std::cout << "Model fitted" << std::endl;
 
 	std::vector<int> predictions;
-	model.Predict(dataset, predictions);
+	model.Predict(x_test, predictions);
 
 	std::cout << "Predictions size: " << predictions.size() << std::endl;
 
-	double accuracy = compute_accuracy(predictions, classes);
+	double accuracy = compute_accuracy(predictions, y_train);
 	std::cout << "Accuracy: " << accuracy << std::endl;
 }

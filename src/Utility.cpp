@@ -35,6 +35,61 @@ void parse_csv(std::vector<std::vector<double>>& out_set, std::vector<int>& labe
 	}
 }
 
+void train_test_split( std::vector<std::vector<double>>& input_x, std::vector<int>& input_y, 
+		std::vector<std::vector<double>>& train_x, std::vector<std::vector<double>>& test_x, 
+		std::vector<int>& train_y, std::vector<int>& test_y, float proportion)
+{
+	// Shuffle
+	shuffle_sets(input_x, input_y);
+
+	// Split by proportion
+	int limit = input_x.size() * proportion;
+	for (size_t i = 0; i < input_x.size(); ++i)
+	{
+		if (i < limit) 
+		{
+			train_x.push_back(input_x[i]);
+			train_y.push_back(input_y[i]);
+		}
+		else
+		{
+			test_x.push_back(input_x[i]);
+			test_y.push_back(input_y[i]);
+		}
+	}
+}
+
+void shuffle_sets(std::vector<std::vector<double>>& x_set, std::vector<int>& y_set)
+{
+	std::vector<std::vector<double>> inplace_x;
+	std::vector<int> inplace_y;
+	std::vector<int> used; // TODO: This approach is woefully inefficient
+
+	std::random_device rd;
+	std::mt19937 gen(rd());
+
+	for(size_t i = 0; i < x_set.size(); ++i)
+	{
+		std::uniform_int_distribution<> distr(i, x_set.size());
+		while (true) 
+		{
+			int index = distr(gen);
+			if (std::find(used.begin(), used.end(), index) != used.end()) continue;
+
+			inplace_x.push_back(x_set[index]);
+			inplace_y.push_back(y_set[index]);
+
+			break;
+		}
+	}
+
+	for (size_t i = 0; i < x_set.size(); ++i)
+	{
+		x_set[i] = inplace_x[i];
+		y_set[i] = inplace_y[i];
+	}
+}
+
 void normalise(std::vector<std::vector<double>>& table)
 {
 	// Basic min/max scaling

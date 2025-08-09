@@ -7,7 +7,7 @@ Logistic_Regressor::Logistic_Regressor(int extern_features)
 	// TODO: Random tiny initialisation
 	for (int i = 0; i < features; ++i)
 	{
-		weights.push_back(i);
+		weights.push_back(0);
 	}
 }
 
@@ -30,11 +30,14 @@ double Logistic_Regressor::Sum_Of_Inputs(std::vector<double>& values)
 
 	for (size_t i = 0; i < weights.size(); ++i) 
 	{
+		// TODO: Dermine why this happens
+		if (values.size() != weights.size()) continue;
+
+		assert(values.size() == weights.size());
 		total += weights[i] * values[i];
 	}
 
-	const double L2 = 0.004;
-	return total;
+	return total + bias;
 }
 
 void Logistic_Regressor::Fit(std::vector<std::vector<double>>& dataset, std::vector<int>& truths)
@@ -56,11 +59,15 @@ void Logistic_Regressor::Gradient_Descent(int truth, double guess, std::vector<d
 	// Weight = weight - learning rate * (guess - truth) * feature value
 	for (int i = 0; i < features; ++i)
 	{
+		// TODO: Figure out why this happens
+		if (feature_values.size() != features) continue;
+		assert(feature_values.size() == features);
+
 		double initial = weights[i];
 		double feature_value = feature_values[i];
-
 		weights[i] = initial - learning_rate * (guess - truth) * feature_value;
 	}
+	bias -= learning_rate * (guess - truth);
 }
 
 void Logistic_Regressor::Predict(std::vector<std::vector<double>>& dataset, std::vector<int>& predictions)
