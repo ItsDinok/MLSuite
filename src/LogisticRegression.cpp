@@ -11,6 +11,11 @@ Logistic_Regressor::Logistic_Regressor(int extern_features)
 	}
 }
 
+Logistic_Regressor::Logistic_Regressor(int extern_features, std::vector<int>& parameters)
+{
+
+}
+
 double Logistic_Regressor::Logistic_Function(std::vector<double>& values)
 {
 	double z = Sum_Of_Inputs(values);
@@ -23,28 +28,25 @@ double Logistic_Regressor::Sum_Of_Inputs(std::vector<double>& values)
 {
 	double total = 0.0d;
 
-	for (int i = 0; i < weights.size(); ++i) 
+	for (size_t i = 0; i < weights.size(); ++i) 
 	{
 		total += weights[i] * values[i];
 	}
 
+	const double L2 = 0.004;
 	return total;
 }
 
-void Logistic_Regressor::Fit(std::vector<std::vector<double>>& dataset)
+void Logistic_Regressor::Fit(std::vector<std::vector<double>>& dataset, std::vector<int>& truths)
 {
 	for (int z = 0; z < epochs; ++z)
 	{
-		for (int i = 0; i < dataset.size(); ++i)
+		for (size_t i = 0; i < dataset.size(); ++i)
 		{
 			std::vector<double> sample = dataset[i];
 			double log = Logistic_Function(sample); // NOT related to log in math
-			int prediction;
 
-			if (log >= 0.5) prediction = 1;
-			else prediction = 0;
-
-			Gradient_Descent(sample[i], prediction, sample);
+			Gradient_Descent(truths[i], log, sample);
 		}
 	}
 }
@@ -63,7 +65,7 @@ void Logistic_Regressor::Gradient_Descent(int truth, double guess, std::vector<d
 
 void Logistic_Regressor::Predict(std::vector<std::vector<double>>& dataset, std::vector<int>& predictions)
 {
-	for (int i = 0; i < dataset.size(); ++i)
+	for (size_t i = 0; i < dataset.size(); ++i)
 	{
 		std::vector<double> sample = dataset[i];
 		double log = Logistic_Function(sample);
