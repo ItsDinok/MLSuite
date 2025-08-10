@@ -4,24 +4,21 @@ Logistic_Regressor::Logistic_Regressor(int extern_features)
 {
 	features = extern_features;
 
-	// TODO: Random tiny initialisation
+	std::random_device rd;
+	std::mt19937 gen(rd());
+	std::uniform_real_distribution<double> distr(-0.1, 0.1);
+
 	for (int i = 0; i < features; ++i)
 	{
-		weights.push_back(0);
+		double weight = distr(gen);	
+		weights.push_back(weight);
 	}
-}
-
-Logistic_Regressor::Logistic_Regressor(int extern_features, std::vector<int>& parameters)
-{
-
 }
 
 double Logistic_Regressor::Logistic_Function(std::vector<double>& values)
 {
 	double z = Sum_Of_Inputs(values);
-	double base = pow(E, -z);
-
-	return 1 / (1 + base);
+	return 1 / (1 + std::exp(-z));
 }
 
 double Logistic_Regressor::Sum_Of_Inputs(std::vector<double>& values)

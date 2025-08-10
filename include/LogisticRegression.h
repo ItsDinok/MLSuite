@@ -1,9 +1,9 @@
 #pragma once
 #include <random>
-#include <math.h>
 #include <vector>
 #include <iostream>
 #include <cassert>
+#include <cmath>
 
 class Logistic_Regressor 
 {
@@ -26,6 +26,6 @@ private:
 	std::vector<double> weights;
 	int features;
 	double bias = 0.0d;
-	int epochs = 200;
-	double learning_rate = 0.001d;
+	int epochs = 1000;
+	double learning_rate = 0.0001d;
 };

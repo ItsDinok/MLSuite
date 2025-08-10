@@ -7,7 +7,7 @@ const std::vector<int> ILLEGAL_ZEROS_DIABETES = {
 	1,2,3,4,5,6,7
 };
 
-int main() 
+void linear_regression()
 {
 	std::string path = "../Datasets/diabetes.csv";
 	std::vector<std::vector<double>> dataset;
@@ -42,4 +42,17 @@ int main()
 
 	double accuracy = compute_accuracy(predictions, y_train);
 	std::cout << "Accuracy: " << accuracy << std::endl;
+}
+
+void isolation_forest()
+{
+
+}
+
+int main() 
+{
+	// TODO: Argument based execution
+	
+
+	return 0;
 }
