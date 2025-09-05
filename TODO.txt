@@ -1,0 +1,3 @@
+* Test pearson functions
+* Test F1, recall, precision functions
+* Test Logistic Regression properly

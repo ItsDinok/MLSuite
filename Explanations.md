@@ -11,7 +11,8 @@ With plans to add:
 * Linear SVC
 * Decision trees
 * Random forests
-* Naive bayes
+* Naive Bayes
+* k-Nearest Neighbour
 
 ## Isolation forest
 
@@ -23,3 +24,37 @@ Scoring function and diagrams below:
 
 
 ## Logistic regression
+
+Logistic regression uses a sigmoid function to map a combination of input features to a probability between 0 and 1, this probability corresponds to its position on the sigmoid curve. It does this by computing the sum of all input features and adding a bias term to them.
+
+Diagrams below:
+
+## Utility Functions
+
+The utility functions are unsung heroes of this project, everything is implemented from scratch, so all file I/O and scoring functions need to be implemented from zero.
+
+### CSV Parsing
+
+This project uses a custom CSV parser which assumes all rows contain all data, all values are separated by commas and all rows are separated by a newline. It separates an output class from the rest of the features and appends them both to their respective vectors.
+
+### Train/Test Splitter
+
+This is a basic implementation of the same function that can be found within sklearn, it takes a number of references to vectors, a reference to the input vectors, and a proportion. It shuffles the data and splits them neatly into the train/test vectors.
+
+### Set Shuffler
+
+This shuffles vectors in place, keeping a 1:1 positional relation between X and Y datasets. This can be massively improved in its current iteration.
+
+### Normalise
+
+This uses basic min/max scaling in order to ensure that all values within a dataset are on a similar scale, ensuring that it is ideal for machine learning. This could be branched into different normalisation methods, but it is not essential.
+
+### Illegal zero handlers
+
+There are currently two handlers for illegal zeros in the dataset, one removes them and one replaces them with the median value. These are chosen depending on the dataset and the model, and whichever approach would work best for the context.
+
+### Accuracy calculator
+
+This takes in the predictions and the truth and computes what the total proportion of predictions were correct. It does this via:
+
+`Accuracy = correct predictions / total predictions`

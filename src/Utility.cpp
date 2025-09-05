@@ -46,7 +46,7 @@ void train_test_split( std::vector<std::vector<double>>& input_x, std::vector<in
 	int limit = input_x.size() * proportion;
 	for (size_t i = 0; i < input_x.size(); ++i)
 	{
-		if (i < limit) 
+		if (i < static_cast<size_t>(limit)) 
 		{
 			train_x.push_back(input_x[i]);
 			train_y.push_back(input_y[i]);
@@ -182,4 +182,111 @@ double compute_accuracy(std::vector<int>& predictions, std::vector<int>& truth)
 	}
 
 	return static_cast<double>(correct) / total;
+}
+
+double compute_precision(std::vector<int>& predictions, std::vector<int>& truth)
+{
+	// 1 represents positive class
+	int true_positive = 0;
+	int false_positive = 0;
+
+	for (size_t i = 0; i < predictions.size(); ++i)
+	{
+		if (predictions[i] == 1)
+		{
+			if (truth[i] == 1) ++true_positive;
+			else ++false_positive;
+		}
+	}
+
+	return static_cast<double>(true_positive) / (true_positive + false_positive);
+}
+
+double compute_recall(std::vector<int>& predictions, std::vector<int>& truth)
+{
+	// 1 represents positive class
+	int true_positive = 0;
+	int false_negative = 0;
+
+	for (size_t i = 0; i < predictions.size(); ++i)
+	{
+		if (predictions[i] == 1 && truth[i] == 1) ++true_positive;
+		else if (predictions[i] == 0 && truth[i] == 1) ++false_negative;
+	}
+
+	return static_cast<double>(true_positive) / (true_positive + false_negative);
+}
+
+double compute_f1_score(std::vector<int>& predictions, std::vector<int>& truth)
+{
+	// 1 represents positive class
+	// f1 = 2 * TP / (2 * TP + FP + FN)
+	int true_positive = 0;
+	int false_positive = 0;
+	int false_negative = 0;
+
+	for (size_t i = 0; i < predictions.size(); ++i)
+	{
+		if (predictions[i] == 1 && truth[i] == 1) ++true_positive;
+		else if (predictions[i] == 1 && truth[i] == 0) ++false_positive;
+		else if (predictions[i] == 0 && truth[i] == 1) ++ false_negative;
+	}
+	
+	int denominator = 2 * true_positive + false_positive + false_negative;
+	return static_cast<double>((2 * true_positive) / denominator);
+}
+
+double average_column(std::vector<std::vector<double>>& table, int column)
+{
+	double total = 0;
+	for (size_t i = 0; i < table.size(); ++i)
+	{
+		total += table[i][column];
+	}
+	return total / table.size();
+}
+
+double average_vector_ints(std::vector<int>& table)
+{
+	double total = 0;
+	for (size_t i = 0; i < table.size(); ++i)
+	{
+		total += table[i];
+	}
+	return total / table.size();
+}
+
+std::unordered_map<int, double> pearson_correlation(std::vector<std::vector<double>>& table, std::vector<int> classes)
+{
+	// This calculates pearson correlation to simply the target feature
+	// This does not produce the pearson matrix
+	// r = sum(x[i] - avg x)(y[i] - avg y)
+	// / sqrt(sum(x[i] - avg x)^2(y[i] - avg y)^2
+
+	std::unordered_map<int, double> pearson_values;
+	double average_y = average_vector_ints(classes);
+
+	for (size_t i = 0; i < table[0].size(); ++i)
+	{
+		double average_x = average_column(table, i);
+
+		double numerator_x = 0, numerator_y = 0;
+		double denominator_x = 0, denominator_y = 0;
+		double numerator = 0;
+
+		for (size_t j = 0; j < table.size(); ++j)
+		{
+			numerator_x += table[j][i] - average_x;
+			numerator_y += classes[j] - average_y;
+			numerator = (table[j][i] - average_x) * (classes[j] - average_y);
+
+			denominator_x += (table[j][i] - average_x) * (table[j][i] - average_x);
+			denominator_y += (classes[j] - average_y) * (classes[j] - average_y);			
+		}
+
+		double denominator = std::sqrt(denominator_x * denominator_y);
+		pearson_values[i] = numerator/denominator;
+	}
+
+	return pearson_values;
 }
